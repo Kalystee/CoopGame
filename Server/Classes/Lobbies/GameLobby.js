@@ -1,11 +1,7 @@
 let LobbyBase = require("./LobbyBase");
 let GameLobbySettings = require("./GameLobbySetting");
 let Connection = require("../Connection");
-let Bullet = require("../Bullet");
 let LobbyState = require("../Utils/LobbyState");
-let Vector2 = require('../Vector2');
-let ServerItem = require("../Utils/ServerItem");
-let AIBase = require('../AI/AIBase');
 
 module.exports = class GameLobby extends LobbyBase {
     constructor(id,settings = GameLobbySettings){
@@ -41,7 +37,6 @@ module.exports = class GameLobby extends LobbyBase {
             console.log("We have enough player we can start the game");
             lobby.lobbyState.currentState = lobby.lobbyState.GAME;
             lobby.onSpawnAllPlayersIntoGame();
-            lobby.onSpawnAIIntoGame();
         }
 
         let returnData = {
@@ -58,7 +53,6 @@ module.exports = class GameLobby extends LobbyBase {
         super.onLeaveLobby(connection);
         lobby.removePlayer(connection);
         //Handle unspawning any server spawned object (loot, bullet etc)
-        lobby.onUnspawnAllAIInGame(connection);
     }
 
     onSpawnAllPlayersIntoGame(){
@@ -66,24 +60,6 @@ module.exports = class GameLobby extends LobbyBase {
         let connections = lobby.connections;
         connections.forEach(connection => {
            lobby.addPlayer(connection);
-        });
-    }
-
-    onSpawnAIIntoGame(){
-        let lobby = this;
-        console.log("Spawn AI into game");
-        lobby.onServerSpawn(new AIBase(),new Vector2(3,2));
-    }
-
-    onUnspawnAllAIInGame(connection = Connection){
-        let lobby = this;
-        let serverItems = lobby.serverItems;
-
-        //remove all server items from the client but still leave them in the server others
-        serverItems.forEach(serverItem => {
-            connection.socket.emit("serverUnspawn", {
-                id : serverItem.id
-            });
         });
     }
 

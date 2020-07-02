@@ -34,6 +34,11 @@ namespace Project.Manager
             SocketReference.Emit("joinGame");
         }
 
+        public void QuitGame()
+        {
+            Application.Quit();
+        }
+
     }
 }
 

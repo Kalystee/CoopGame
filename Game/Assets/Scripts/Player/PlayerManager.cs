@@ -9,7 +9,8 @@ namespace Project.Player
     public class PlayerManager : MonoBehaviour
     {
         public CharacterController controller;
-        public Transform cam;
+        [SerializeField]
+        private Transform cam;
 
         [Header("Data")]
         [SerializeField]
@@ -36,6 +37,7 @@ namespace Project.Player
 
         public void Start()
         {
+            cam = Camera.main.transform;
             attackCooldown = new Cooldown(1);
             /*bulletData = new BulletData();*/
 
