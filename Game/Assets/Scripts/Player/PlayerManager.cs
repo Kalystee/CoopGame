@@ -19,38 +19,31 @@ namespace Project.Player
         private float turnSmoothTime = 0.1f;
         private float turnSmoothVelocity; //Ref
 
-        /*[Header("Object Reference")]
-        [SerializeField]
-        private Transform barrelPivot;
-        [SerializeField]
-        private Transform bulletSpawnPoint;*/
-
         [Header("Class Reference")]
         [SerializeField]
-       // private NetworkIdentity networkIdentity;
+        private NetworkIdentity networkIdentity;
 
         private float lastRotation;
-      /*  private BulletData bulletData;*/
 
-        //Shooting
+
+        //Attack
         private Cooldown attackCooldown;
 
         public void Start()
         {
             cam = Camera.main.transform;
             attackCooldown = new Cooldown(1);
-            /*bulletData = new BulletData();*/
+          
 
         }
         public void Update()
         {
-            CheckMovement();
 
-            // if (networkIdentity.IsControlling()) {
-            //CheckMovement();
+            if (networkIdentity.IsControlling()) {
+                CheckMovement();
             // CheckAiming();
             // CheckShooting();
-            //}
+            }
         }
 
         public float GetLastRotation()
@@ -98,7 +91,7 @@ namespace Project.Player
                
 
                 //Send Attack
-                //networkIdentity.GetSocket().Emit("fireBullet", new JSONObject(JsonUtility.ToJson(bulletData)));
+                //networkIdentity.GetSocket().Emit("attack", new JSONObject(JsonUtility.ToJson(bulletData)));
 
             }
         }

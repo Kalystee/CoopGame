@@ -26,7 +26,7 @@ namespace Project.Networking
             player.position = new Position();
             player.position.x = "";
             player.position.y = "";
-
+            player.position.z = "";
 
             if (!networkIdentity.IsControlling())
             {
@@ -64,6 +64,7 @@ namespace Project.Networking
             //Update player information
             player.position.x = transform.position.x.TwoDecimals().ToString().Replace(",",".");
             player.position.y = transform.position.y.TwoDecimals().ToString().Replace(",", ".");
+            player.position.z = transform.position.z.TwoDecimals().ToString().Replace(",", ".");
 
             networkIdentity.GetSocket().Emit("updatePosition", new JSONObject(JsonUtility.ToJson(player)));
         }

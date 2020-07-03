@@ -32,7 +32,7 @@ module.exports = class GameLobby extends LobbyBase {
         let lobby = this;
         let socket = connection.socket;
         super.onEnterLobby(connection);
-       // lobby.addPlayer(connection);
+        lobby.addPlayer(connection);
         if(lobby.connections.length === lobby.settings.maxPlayers){
             console.log("We have enough player we can start the game");
             lobby.lobbyState.currentState = lobby.lobbyState.GAME;
@@ -261,9 +261,9 @@ module.exports = class GameLobby extends LobbyBase {
         var returnData = {
             id: connection.player.id
         };
-
+        console.log('Add player');
         socket.emit("spawn",returnData);
-        //socket.broadcast.to(lobby.id).emit("spawn",returnData);
+        socket.broadcast.to(lobby.id).emit("spawn",returnData);
 
         //Tell myself about everyone else already in the lobby
         connections.forEach(c => {

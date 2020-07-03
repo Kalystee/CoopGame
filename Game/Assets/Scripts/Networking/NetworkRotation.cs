@@ -29,8 +29,7 @@ namespace Project.Networking
             networkIdentity = GetComponent<NetworkIdentity>();
 
             player = new PlayerRotation();
-            player.tankRotation = "";
-            player.barrelRotation ="";
+            player.rotation = "";
             if (!networkIdentity.IsControlling())
             {
                 enabled = false;
@@ -61,8 +60,7 @@ namespace Project.Networking
 
         private void SendData()
         {
-            player.tankRotation = transform.localEulerAngles.z.TwoDecimals().ToString().Replace(",", ".");
-            player.barrelRotation = playerManager.GetLastRotation().TwoDecimals().ToString().Replace(",", ".");
+            player.rotation = transform.localEulerAngles.z.TwoDecimals().ToString().Replace(",", ".");
             networkIdentity.GetSocket().Emit("updateRotation", new JSONObject(JsonUtility.ToJson(player)));
         }
     }

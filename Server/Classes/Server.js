@@ -8,7 +8,6 @@ let GameLobbySettings = require("./Lobbies/GameLobbySetting");
 
 module.exports = class Server {
     constructor(isLocal = false){
-        this.database = new Database(isLocal);
         this.connections = [];
         this.lobbys = [];
         this.lobbys[0] = new LobbyBase(0);
@@ -37,7 +36,6 @@ module.exports = class Server {
 
         console.log("Add new Player to the server ("+player.id+")");
         server.connections[player.id] = connection;
-
         socket.join(player.lobby);
         connection.lobby = lobbys[player.lobby];
         connection.lobby.onEnterLobby(connection);
@@ -73,6 +71,7 @@ module.exports = class Server {
             return item instanceof GameLobby;
         });
         console.log("Found ("+ gameLobbies.length+ ") lobbies on the server");
+
         gameLobbies.forEach(lobby => {
             if(!lobbyFound){
                 let canJoin = lobby.canEnterLobby(connection);
@@ -85,7 +84,7 @@ module.exports = class Server {
 
         if(!lobbyFound){
             console.log("Making a new game");
-            let gameLobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings("FFA",2));
+            let gameLobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings("COOP",2));
             server.lobbys.push(gameLobby);
             server.onSwitchLobby(connection,gameLobby.id);
         }

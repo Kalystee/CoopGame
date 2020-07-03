@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 228818551}
-  m_LocalRotation: {x: 0.13505942, y: -8.719026e-16, z: 1.7869098e-17, w: 0.9908375}
+  m_LocalRotation: {x: 0.1350594, y: 0.00000001476463, z: -0.0000000020125421, w: 0.9908375}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -516,7 +516,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1285319331}
-  m_LocalRotation: {x: 0.11701424, y: 0.00000001708818, z: -0.000000002013392, w: 0.99313027}
+  m_LocalRotation: {x: 0.11701424, y: -0.000000017088176, z: 0.0000000020133915, w: 0.99313027}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -856,6 +856,9 @@ GameObject:
   - component: {fileID: 2995396276602417400}
   - component: {fileID: 2995396276602417406}
   - component: {fileID: 2995396276602417407}
+  - component: {fileID: 1681299147710577854}
+  - component: {fileID: 8832366396591042105}
+  - component: {fileID: 8492264808836781208}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -913,7 +916,48 @@ MonoBehaviour:
   cam: {fileID: 0}
   speed: 6
   turnSmoothTime: 0.1
-  lastRotation: 0
+  networkIdentity: {fileID: 1681299147710577854}
+--- !u!114 &1681299147710577854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2995396276602417403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7484f02cdb5ed2b4da62088523ca9944, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 
+  isControlling: 0
+--- !u!114 &8832366396591042105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2995396276602417403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11d91a2836b9df14dab58542f5888a26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  oldPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &8492264808836781208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2995396276602417403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c585dafa6e3985d47a06f79fe3eca97d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  oldRotation: 0
+  playerManager: {fileID: 2995396276602417407}
 --- !u!1 &2995396277003064910
 GameObject:
   m_ObjectHideFlags: 0
@@ -925,7 +969,7 @@ GameObject:
   - component: {fileID: 2995396277003064946}
   - component: {fileID: 2995396277003064909}
   - component: {fileID: 2995396277003064908}
-  - component: {fileID: 2995396277003064911}
+  - component: {fileID: 5150535207543062533}
   m_Layer: 0
   m_Name: GFX
   m_TagString: Untagged
@@ -995,7 +1039,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &2995396277003064911
+--- !u!136 &5150535207543062533
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1005,7 +1049,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5000001
+  m_Radius: 0.50000006
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  m_Center: {x: 0.00000005960464, y: 0, z: -0.00000008940696}

@@ -1,7 +1,6 @@
 let Connection = require("../Connection");
 let ServerItem = require('../Utils/ServerItem');
-let Vector2 = require('../Vector2');
-let AIBase = require('../AI/AIBase');
+let Vector2 = require('../Vector3');
 
 module.exports = class LobbyBase {
     constructor(id){
@@ -14,19 +13,7 @@ module.exports = class LobbyBase {
         let lobby = this;
         let serverItems = lobby.serverItems;
 
-        let aiList = serverItems.filter(item => {
-            return item instanceof AIBase;
-        })
 
-        aiList.forEach(ai =>{
-            ai.onUpdate(data => {
-                lobby.connections.forEach(connection => {
-                    let socket = connection.socket;
-                    socket.emit('updatePosition',data);
-                });
-            });
-
-        });
     }
 
     onEnterLobby(connection = Connection){

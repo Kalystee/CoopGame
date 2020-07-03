@@ -1,12 +1,13 @@
 var shortID = require('shortid');
-var Vector2 = require('./Vector2');
+var Vector3 = require('./Vector3');
 
 module.exports = class Player {
     constructor(){
         this.username = "Default_Player";
         this.id = shortID.generate();
-        this.position = new Vector2();
-        this.rotation = new Number(0);
+        this.lobby = 0;
+        this.position = new Vector3();
+        this.rotation = "";
         this.health = new Number(100);
         this.isDead = false;
     }
@@ -16,7 +17,7 @@ module.exports = class Player {
         return '('+ player.username+" : "+player.id+")";
     }
 
-    dealDamage(amount = Number){
+   /* dealDamage(amount = Number){
         //Adjust Health
         this.health = this.health - amount;
 
@@ -25,5 +26,5 @@ module.exports = class Player {
             this.isDead = true;
         }
         return this.isDead;
-    }
+    }*/
 };

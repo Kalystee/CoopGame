@@ -310,10 +310,12 @@ public class JSONObject {
 							try {
 #if USEFLOAT
 								n = System.Convert.ToSingle(str);
+                                
 #else
-								n = System.Convert.ToDouble(str);				 
+								n = System.Convert.ToDouble(str);
+                               
 #endif
-								type = Type.NUMBER;
+                                type = Type.NUMBER;
 							} catch(System.FormatException) {
 								type = Type.NULL;
 								Debug.LogWarning("improper JSON formatting:" + str);

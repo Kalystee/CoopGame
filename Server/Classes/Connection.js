@@ -31,13 +31,12 @@ module.exports = class Connection {
         socket.on("updatePosition",function (data) {
             player.position.x = data.position.x;
             player.position.y = data.position.y;
-
             socket.broadcast.to(connection.lobby.id).emit("updatePosition",player);
         });
 
         socket.on("updateRotation",function (data) {
-            player.tankRotation = data.tankRotation;
-            player.barrelRotation = data.barrelRotation;
+            player.rotation = data.rotation;
+
             socket.broadcast.to(connection.lobby.id).emit('updateRotation',player)
         });
     }

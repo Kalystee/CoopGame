@@ -215,31 +215,16 @@ namespace Project.Networking
     {
         public string x;
         public string y;
+        public string z;
     }
 
     [Serializable]
     public class PlayerRotation
     {
-        public string tankRotation;
-        public string barrelRotation;
+        public string rotation;
+
     }
 
-    [Serializable]
-    public class BulletData
-    {
-        public string id;
-        public string activator;
-        public Position position;
-        public Position direction;
-
-        public BulletData(string id="", string activator="")
-        {
-            this.position = new Position();
-            this.direction = new Position();
-            this.id = id;
-            this.activator = activator;
-        }
-    }
 
     [Serializable]
     public class IDData
