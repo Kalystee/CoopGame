@@ -71,6 +71,12 @@ namespace Project.Networking
                  ni.SetCotrollerID(id);
                  ni.SetSocketReference(this);
                  serverObjects.Add(id, ni);
+
+                 //Enabling Camera
+                 if (ni.IsControlling())
+                 {
+                     go.transform.Find("Third Person Camera").gameObject.SetActive(true);
+                 }
                  Debug.LogFormat("I have spawned");
 
              });
@@ -91,92 +97,92 @@ namespace Project.Networking
                 string id = e.data["id"].ToString().RemoveQuotes();
                 float x = float.Parse(e.data["position"]["x"].str, CultureInfo.InvariantCulture.NumberFormat);
                 float y = float.Parse(e.data["position"]["y"].str, CultureInfo.InvariantCulture.NumberFormat);
+                float z = float.Parse(e.data["position"]["z"].str, CultureInfo.InvariantCulture.NumberFormat);
 
                 NetworkIdentity ni = serverObjects[id];
-                ni.transform.position = new Vector3(x, y, 0);
+                ni.transform.position = new Vector3(x, y, z);
 
             });
 
             On("updateRotation", (e) =>
             {
                 string id = e.data["id"].ToString().RemoveQuotes();
-                float tankRotation = float.Parse(e.data["tankRotation"].str, CultureInfo.InvariantCulture.NumberFormat);
-                float barrelRotation = float.Parse(e.data["barrelRotation"].str, CultureInfo.InvariantCulture.NumberFormat);
+
+                float rotation = float.Parse(e.data["rotation"].str, CultureInfo.InvariantCulture.NumberFormat);
 
                 NetworkIdentity ni = serverObjects[id];
-                ni.transform.localEulerAngles = new Vector3(0, 0, tankRotation);
-                ni.GetComponent<PlayerManager>().SetRotation(barrelRotation);
+                ni.transform.localEulerAngles = new Vector3(0, rotation,0);
 
             });
 
-            On("serverSpawn", (e) =>
-            {
-                string name = e.data["name"].str;
-                string id = e.data["id"].ToString().RemoveQuotes();
+            //On("serverSpawn", (e) =>
+            //{
+            //    string name = e.data["name"].str;
+            //    string id = e.data["id"].ToString().RemoveQuotes();
                
-                float x = float.Parse(e.data["position"]["x"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
-                float y = float.Parse(e.data["position"]["y"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
-                Debug.LogFormat("Server wants us to spawn a '{0}'", name);
+            //    float x = float.Parse(e.data["position"]["x"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
+            //    float y = float.Parse(e.data["position"]["y"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
+            //    Debug.LogFormat("Server wants us to spawn a '{0}'", name);
 
-                if (!serverObjects.ContainsKey(id))
-                {
-                    ServerObjectData sod = serverSpawnables.GetObjectByName(name);
-                    GameObject spawnedObject = Instantiate(sod.prefab, networkContainer);
-                    spawnedObject.transform.position = new Vector3(x, y, 0);
-                    NetworkIdentity ni = spawnedObject.GetComponent<NetworkIdentity>();
-                    ni.SetCotrollerID(id);
-                    ni.SetSocketReference(this);
+            //    if (!serverObjects.ContainsKey(id))
+            //    {
+            //        ServerObjectData sod = serverSpawnables.GetObjectByName(name);
+            //        GameObject spawnedObject = Instantiate(sod.prefab, networkContainer);
+            //        spawnedObject.transform.position = new Vector3(x, y, 0);
+            //        NetworkIdentity ni = spawnedObject.GetComponent<NetworkIdentity>();
+            //        ni.SetCotrollerID(id);
+            //        ni.SetSocketReference(this);
 
-                    //if bullet apply direction as well
-                    if(name == "Bullet")
-                    {
-                        float directionX = float.Parse(e.data["direction"]["x"].str, CultureInfo.InvariantCulture.NumberFormat);
-                        float directionY = float.Parse(e.data["direction"]["y"].str, CultureInfo.InvariantCulture.NumberFormat);
-                        string activator = e.data["activator"].ToString().RemoveQuotes();
-                        float speed = float.Parse(e.data["speed"].str, CultureInfo.InvariantCulture.NumberFormat);
+            //        //if bullet apply direction as well
+            //        if(name == "Bullet")
+            //        {
+            //            float directionX = float.Parse(e.data["direction"]["x"].str, CultureInfo.InvariantCulture.NumberFormat);
+            //            float directionY = float.Parse(e.data["direction"]["y"].str, CultureInfo.InvariantCulture.NumberFormat);
+            //            string activator = e.data["activator"].ToString().RemoveQuotes();
+            //            float speed = float.Parse(e.data["speed"].str, CultureInfo.InvariantCulture.NumberFormat);
 
-                        float rot = Mathf.Atan2(directionY, directionX) * Mathf.Rad2Deg;
-                        Vector3 currentRotation = new Vector3(0, 0, rot - 90);
-                        spawnedObject.transform.rotation = Quaternion.Euler(currentRotation);
+            //            float rot = Mathf.Atan2(directionY, directionX) * Mathf.Rad2Deg;
+            //            Vector3 currentRotation = new Vector3(0, 0, rot - 90);
+            //            spawnedObject.transform.rotation = Quaternion.Euler(currentRotation);
 
-                        WhoActivateMe whoActivateMe = spawnedObject.GetComponent<WhoActivateMe>();
-                        whoActivateMe.SetActivator(activator);
+            //            WhoActivateMe whoActivateMe = spawnedObject.GetComponent<WhoActivateMe>();
+            //            whoActivateMe.SetActivator(activator);
 
-                        Projectile projectile = spawnedObject.GetComponent<Projectile>();
-                        projectile.Direction = new Vector2(directionX, directionY);
-                        projectile.Speed = speed;
-                    }
+            //            Projectile projectile = spawnedObject.GetComponent<Projectile>();
+            //            projectile.Direction = new Vector2(directionX, directionY);
+            //            projectile.Speed = speed;
+            //        }
 
-                    serverObjects.Add(id, ni);
-                }
+            //        serverObjects.Add(id, ni);
+            //    }
 
-            });
+            //});
 
-            On("serverUnspawn", (e) =>
-            {
-                string id = e.data["id"].ToString().RemoveQuotes();
-                NetworkIdentity ni = serverObjects[id];
-                serverObjects.Remove(id);
-                DestroyImmediate(ni.gameObject);
-            });
+            //On("serverUnspawn", (e) =>
+            //{
+            //    string id = e.data["id"].ToString().RemoveQuotes();
+            //    NetworkIdentity ni = serverObjects[id];
+            //    serverObjects.Remove(id);
+            //    DestroyImmediate(ni.gameObject);
+            //});
 
-            On("playerDied", (e) =>
-            {
-                string id = e.data["id"].ToString().RemoveQuotes();
-                NetworkIdentity ni = serverObjects[id];
-                ni.gameObject.SetActive(false);
-            });
+            //On("playerDied", (e) =>
+            //{
+            //    string id = e.data["id"].ToString().RemoveQuotes();
+            //    NetworkIdentity ni = serverObjects[id];
+            //    ni.gameObject.SetActive(false);
+            //});
 
-            On("playerRespawn", (e) =>
-            {
-                string id = e.data["id"].ToString().RemoveQuotes();
-                float x = e.data["position"]["x"].f;
-                float y = e.data["position"]["y"].f;
-                NetworkIdentity ni = serverObjects[id];
-                ni.transform.position = new Vector3(x, y, 0);
-                ni.gameObject.SetActive(true);
+            //On("playerRespawn", (e) =>
+            //{
+            //    string id = e.data["id"].ToString().RemoveQuotes();
+            //    float x = e.data["position"]["x"].f;
+            //    float y = e.data["position"]["y"].f;
+            //    NetworkIdentity ni = serverObjects[id];
+            //    ni.transform.position = new Vector3(x, y, 0);
+            //    ni.gameObject.SetActive(true);
 
-            });
+            //});
 
             On("loadGame", (e) =>
             {

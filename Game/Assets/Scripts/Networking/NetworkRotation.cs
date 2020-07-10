@@ -40,9 +40,9 @@ namespace Project.Networking
         {
             if (networkIdentity.IsControlling())
             {
-                if(oldRotation != transform.localEulerAngles.z)
+                if(oldRotation != transform.localEulerAngles.y)
                 {
-                    oldRotation = transform.localEulerAngles.z;
+                    oldRotation = transform.localEulerAngles.y;
                     stillCounter = 0;
                     SendData();
                 }
@@ -60,7 +60,7 @@ namespace Project.Networking
 
         private void SendData()
         {
-            player.rotation = transform.localEulerAngles.z.TwoDecimals().ToString().Replace(",", ".");
+            player.rotation = transform.localEulerAngles.y.TwoDecimals().ToString().Replace(",", ".");
             networkIdentity.GetSocket().Emit("updateRotation", new JSONObject(JsonUtility.ToJson(player)));
         }
     }

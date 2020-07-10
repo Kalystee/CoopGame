@@ -5,6 +5,9 @@ ScriptsOnlyBuild:
     - Project.Manager.MenuManager
     - Project.Manager.SceneManagementManager
     - Project.Networking.NetworkClient
+    - Project.Networking.NetworkIdentity
+    - Project.Networking.NetworkRotation
+    - Project.Networking.NetworkTransform
     - Project.Player.PlayerManager
     - Project.Scriptable.ServerObject
     Cinemachine.dll:
@@ -189,9 +192,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12196}
     - Class: 114
+      Script: {instanceID: 12226}
+    - Class: 114
       Script: {instanceID: 12592}
     - Class: 114
       Script: {instanceID: 12676}
+    - Class: 114
+      Script: {instanceID: 12714}
     - Class: 114
       Script: {instanceID: 12794}
     - Class: 114
@@ -200,6 +207,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 12856}
     - Class: 114
       Script: {instanceID: 12862}
+    - Class: 114
+      Script: {instanceID: 12912}
     - Class: 114
       Script: {instanceID: 12938}
     - Class: 114
@@ -1005,7 +1014,7 @@ ScriptsOnlyBuild:
     className: ToggleGroup
   - hash:
       serializedVersion: 2
-      Hash: c889eb52f48f17723d1efe0867803b4d
+      Hash: 385b769c3a54736e5634551f4479fdc6
     assemblyName: Assembly-CSharp.dll
     namespaceName: Project.Player
     className: PlayerManager
