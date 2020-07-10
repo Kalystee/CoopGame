@@ -31,6 +31,7 @@ module.exports = class Connection {
         socket.on("updatePosition",function (data) {
             player.position.x = data.position.x;
             player.position.y = data.position.y;
+            player.position.z = data.position.z;
             socket.broadcast.to(connection.lobby.id).emit("updatePosition",player);
         });
 

@@ -15,7 +15,7 @@ module.exports = class GameLobby extends LobbyBase {
         let lobby = this;
 
         super.onUpdate();
-        lobby.updateBullets();
+        //lobby.updateBullets();
         lobby.updateDeadPlayers();
     }
 
@@ -36,7 +36,7 @@ module.exports = class GameLobby extends LobbyBase {
         if(lobby.connections.length === lobby.settings.maxPlayers){
             console.log("We have enough player we can start the game");
             lobby.lobbyState.currentState = lobby.lobbyState.GAME;
-            lobby.onSpawnAllPlayersIntoGame();
+            //lobby.onSpawnAllPlayersIntoGame();
         }
 
         let returnData = {
@@ -74,7 +74,7 @@ module.exports = class GameLobby extends LobbyBase {
             if(isDestroyed) {
                 lobby.despawnBullet(bullet);
             } else {
-                var returnData = {
+                /*var returnData = {
                     id: bullet.id,
                     position: {
                         x: bullet.position.x.toString(),
@@ -84,7 +84,7 @@ module.exports = class GameLobby extends LobbyBase {
 
                 connections.forEach(connection => {
                     connection.socket.emit('updatePosition', returnData);
-                });
+                });*/
             }
         });
     }
