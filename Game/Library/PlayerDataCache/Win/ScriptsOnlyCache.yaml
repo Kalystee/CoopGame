@@ -1030,4 +1030,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/MainMenu.unity
   - Assets/Scenes/Online.unity
   - Assets/Scenes/Level.unity
-  playerPath: C:/Users/mytit/Documents/Project Solo/CoopGame/Builds/0.0.1/CoopGame.exe
+  playerPath: C:/Users/mytit/Documents/Project_Solo/CoopGame/Builds/0.0.1/CoopGame.exe

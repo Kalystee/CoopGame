@@ -1,7 +1,5 @@
-﻿using Project.Player;
+﻿using Project.Entities.Player;
 using Project.Utility;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Project.Networking

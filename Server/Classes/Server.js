@@ -84,7 +84,7 @@ module.exports = class Server {
 
         if(!lobbyFound){
             console.log("Making a new game");
-            let gameLobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings("COOP",2));
+            let gameLobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings("COOP",1));
             server.lobbys.push(gameLobby);
             server.onSwitchLobby(connection,gameLobby.id);
         }

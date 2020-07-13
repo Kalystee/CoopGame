@@ -1,6 +1,6 @@
 let Connection = require("../Connection");
 let ServerItem = require('../Utils/ServerItem');
-let Vector2 = require('../Vector3');
+let Vector3 = require('../Vector3');
 
 module.exports = class LobbyBase {
     constructor(id){
@@ -38,11 +38,10 @@ module.exports = class LobbyBase {
         }
     }
 
-    onServerSpawn(item = ServerItem, location = Vector2){
+    onServerSpawn(item = ServerItem, location = Vector3){
         let lobby = this;
         let serverItems = lobby.serverItems;
         let connections = lobby.connections;
-
         //Set position
         item.position = location;
 

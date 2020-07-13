@@ -4,7 +4,7 @@ using UnityEngine;
 using SocketIO;
 using System;
 using Project.Utility;
-using Project.Player;
+using Project.Entities.Player;
 using Project.Scriptable;
 using Project.Gameplay;
 using System.Globalization;
@@ -36,7 +36,7 @@ namespace Project.Networking
         {
             base.Start();
             Initialize();
-            setupEvents();
+            SetupEvents();
         }
 
         public override void Update()
@@ -49,7 +49,7 @@ namespace Project.Networking
             serverObjects = new Dictionary<string, NetworkIdentity>();
         }
 
-        private void setupEvents()
+        private void SetupEvents()
         {
             On("open", (e) =>
              {
@@ -115,26 +115,27 @@ namespace Project.Networking
 
             });
 
-            //On("serverSpawn", (e) =>
-            //{
-            //    string name = e.data["name"].str;
-            //    string id = e.data["id"].ToString().RemoveQuotes();
-               
-            //    float x = float.Parse(e.data["position"]["x"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
-            //    float y = float.Parse(e.data["position"]["y"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
-            //    Debug.LogFormat("Server wants us to spawn a '{0}'", name);
+            On("serverSpawn", (e) =>
+            {
+                string name = e.data["name"].str;
+                string id = e.data["id"].ToString().RemoveQuotes();
+                float x = float.Parse(e.data["position"]["x"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
+                float y = float.Parse(e.data["position"]["y"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
+                float z = float.Parse(e.data["position"]["z"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
 
-            //    if (!serverObjects.ContainsKey(id))
-            //    {
-            //        ServerObjectData sod = serverSpawnables.GetObjectByName(name);
-            //        GameObject spawnedObject = Instantiate(sod.prefab, networkContainer);
-            //        spawnedObject.transform.position = new Vector3(x, y, 0);
-            //        NetworkIdentity ni = spawnedObject.GetComponent<NetworkIdentity>();
-            //        ni.SetCotrollerID(id);
-            //        ni.SetSocketReference(this);
+                Debug.LogFormat("Server wants us to spawn a '{0}'", name);
 
-            //        //if bullet apply direction as well
-            //        if(name == "Bullet")
+                if (!serverObjects.ContainsKey(id))
+                {
+                    ServerObjectData sod = serverSpawnables.GetObjectByName(name);
+                    GameObject spawnedObject = Instantiate(sod.prefab, networkContainer);
+                    spawnedObject.transform.position = new Vector3(x, y, z);
+                    NetworkIdentity ni = spawnedObject.GetComponent<NetworkIdentity>();
+                    ni.SetCotrollerID(id);
+                    ni.SetSocketReference(this);
+
+                    //if bullet apply direction as well
+             //       if(name == "Bullet")
             //        {
             //            float directionX = float.Parse(e.data["direction"]["x"].str, CultureInfo.InvariantCulture.NumberFormat);
             //            float directionY = float.Parse(e.data["direction"]["y"].str, CultureInfo.InvariantCulture.NumberFormat);
@@ -153,25 +154,25 @@ namespace Project.Networking
             //            projectile.Speed = speed;
             //        }
 
-            //        serverObjects.Add(id, ni);
-            //    }
+                    serverObjects.Add(id, ni);
+                }
 
-            //});
+            });
 
-            //On("serverUnspawn", (e) =>
-            //{
-            //    string id = e.data["id"].ToString().RemoveQuotes();
-            //    NetworkIdentity ni = serverObjects[id];
-            //    serverObjects.Remove(id);
-            //    DestroyImmediate(ni.gameObject);
-            //});
+            On("serverUnspawn", (e) =>
+            {
+                string id = e.data["id"].ToString().RemoveQuotes();
+                NetworkIdentity ni = serverObjects[id];
+                serverObjects.Remove(id);
+                DestroyImmediate(ni.gameObject);
+            });
 
-            //On("playerDied", (e) =>
-            //{
-            //    string id = e.data["id"].ToString().RemoveQuotes();
-            //    NetworkIdentity ni = serverObjects[id];
-            //    ni.gameObject.SetActive(false);
-            //});
+            On("playerDied", (e) =>
+            {
+                string id = e.data["id"].ToString().RemoveQuotes();
+                NetworkIdentity ni = serverObjects[id];
+                ni.gameObject.SetActive(false);
+            });
 
             //On("playerRespawn", (e) =>
             //{
@@ -197,8 +198,6 @@ namespace Project.Networking
             {
                 OnGameStateChange.Invoke(e);   //I prefer use Invoke to make difference between Action and function
             });
-
-
         }
 
         public void AttempToJoinLobby()
@@ -231,6 +230,13 @@ namespace Project.Networking
 
     }
 
+    [Serializable]
+    public class CombatData
+    {
+        public string initiatorId;
+        public string targetId;
+        public string ammount;
+    }
 
     [Serializable]
     public class IDData

@@ -40,5 +40,9 @@ module.exports = class Connection {
 
             socket.broadcast.to(connection.lobby.id).emit('updateRotation',player)
         });
+
+        socket.on("takeDamage",function(data){
+            connection.lobby.onAttackSuccess(connection,data);
+        })
     }
 }

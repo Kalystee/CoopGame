@@ -1,10 +1,10 @@
 let shortID = require('shortid');
-let Vector2 = require('../Vector2');
+let Vector3 = require('../Vector3');
 
 module.exports = class ServerItem {
     constructor(){
         this.username = "ServerItem";
         this.id = shortID.generate();
-        this.position = new Vector2();
+        this.position = new Vector3();
     }
 }

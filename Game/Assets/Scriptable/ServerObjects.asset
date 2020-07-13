@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e97e47abae8f5de4f901a8b41391a93e, type: 3}
   m_Name: ServerObjects
   m_EditorClassIdentifier: 
-  objects: []
+  objects:
+  - name: AI_Base
+    prefab: {fileID: 4317953186292657397, guid: 18d211d123a5eb14ba96957206de168c,
+      type: 3}
