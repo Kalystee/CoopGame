@@ -9,6 +9,7 @@ using Project.Scriptable;
 using Project.Gameplay;
 using System.Globalization;
 using Project.Manager;
+using Project.Entities.Enemy;
 
 namespace Project.Networking
 {
@@ -115,46 +116,68 @@ namespace Project.Networking
 
             });
 
+            On("updateAI", (e) => {
+                string id = e.data["id"].ToString().RemoveQuotes();
+
+                float x = float.Parse(e.data["position"]["x"].str, CultureInfo.InvariantCulture.NumberFormat);
+                float y = float.Parse(e.data["position"]["y"].str, CultureInfo.InvariantCulture.NumberFormat);
+                float z = float.Parse(e.data["position"]["z"].str, CultureInfo.InvariantCulture.NumberFormat);
+
+                float rotation = float.Parse(e.data["rotation"].str, CultureInfo.InvariantCulture.NumberFormat);
+
+                NetworkIdentity ni = serverObjects[id];
+
+                if (ni.gameObject.activeInHierarchy)
+                {
+                    StartCoroutine(AIPositionSmoothing(ni.transform, new Vector3(x, y, z)));
+                    ni.GetComponent<EnemyManager>().SetRotation(rotation);
+                }
+            });
+
             On("serverSpawn", (e) =>
             {
                 string name = e.data["name"].str;
                 string id = e.data["id"].ToString().RemoveQuotes();
-                float x = float.Parse(e.data["position"]["x"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
-                float y = float.Parse(e.data["position"]["y"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
-                float z = float.Parse(e.data["position"]["z"].ToString().RemoveQuotes(), CultureInfo.InvariantCulture.NumberFormat);
+                float x = float.Parse(e.data["position"]["x"].ToString(), CultureInfo.InvariantCulture.NumberFormat);
+                float y = float.Parse(e.data["position"]["y"].ToString(), CultureInfo.InvariantCulture.NumberFormat);
+                float z = float.Parse(e.data["position"]["z"].ToString(), CultureInfo.InvariantCulture.NumberFormat);
 
                 Debug.LogFormat("Server wants us to spawn a '{0}'", name);
-
+               
                 if (!serverObjects.ContainsKey(id))
                 {
                     ServerObjectData sod = serverSpawnables.GetObjectByName(name);
                     GameObject spawnedObject = Instantiate(sod.prefab, networkContainer);
-                    spawnedObject.transform.position = new Vector3(x, y, z);
+                    spawnedObject.transform.position = new Vector3(x,y,z);
                     NetworkIdentity ni = spawnedObject.GetComponent<NetworkIdentity>();
                     ni.SetCotrollerID(id);
                     ni.SetSocketReference(this);
+                    Debug.Log(spawnedObject.transform.position);
+
+
 
                     //if bullet apply direction as well
-             //       if(name == "Bullet")
-            //        {
-            //            float directionX = float.Parse(e.data["direction"]["x"].str, CultureInfo.InvariantCulture.NumberFormat);
-            //            float directionY = float.Parse(e.data["direction"]["y"].str, CultureInfo.InvariantCulture.NumberFormat);
-            //            string activator = e.data["activator"].ToString().RemoveQuotes();
-            //            float speed = float.Parse(e.data["speed"].str, CultureInfo.InvariantCulture.NumberFormat);
+                    //       if(name == "Bullet")
+                    //        {
+                    //            float directionX = float.Parse(e.data["direction"]["x"].str, CultureInfo.InvariantCulture.NumberFormat);
+                    //            float directionY = float.Parse(e.data["direction"]["y"].str, CultureInfo.InvariantCulture.NumberFormat);
+                    //            string activator = e.data["activator"].ToString().RemoveQuotes();
+                    //            float speed = float.Parse(e.data["speed"].str, CultureInfo.InvariantCulture.NumberFormat);
 
-            //            float rot = Mathf.Atan2(directionY, directionX) * Mathf.Rad2Deg;
-            //            Vector3 currentRotation = new Vector3(0, 0, rot - 90);
-            //            spawnedObject.transform.rotation = Quaternion.Euler(currentRotation);
+                    //            float rot = Mathf.Atan2(directionY, directionX) * Mathf.Rad2Deg;
+                    //            Vector3 currentRotation = new Vector3(0, 0, rot - 90);
+                    //            spawnedObject.transform.rotation = Quaternion.Euler(currentRotation);
 
-            //            WhoActivateMe whoActivateMe = spawnedObject.GetComponent<WhoActivateMe>();
-            //            whoActivateMe.SetActivator(activator);
+                    //            WhoActivateMe whoActivateMe = spawnedObject.GetComponent<WhoActivateMe>();
+                    //            whoActivateMe.SetActivator(activator);
 
-            //            Projectile projectile = spawnedObject.GetComponent<Projectile>();
-            //            projectile.Direction = new Vector2(directionX, directionY);
-            //            projectile.Speed = speed;
-            //        }
+                    //            Projectile projectile = spawnedObject.GetComponent<Projectile>();
+                    //            projectile.Direction = new Vector2(directionX, directionY);
+                    //            projectile.Speed = speed;
+                    //        }
 
                     serverObjects.Add(id, ni);
+
                 }
 
             });
@@ -174,16 +197,7 @@ namespace Project.Networking
                 ni.gameObject.SetActive(false);
             });
 
-            //On("playerRespawn", (e) =>
-            //{
-            //    string id = e.data["id"].ToString().RemoveQuotes();
-            //    float x = e.data["position"]["x"].f;
-            //    float y = e.data["position"]["y"].f;
-            //    NetworkIdentity ni = serverObjects[id];
-            //    ni.transform.position = new Vector3(x, y, 0);
-            //    ni.gameObject.SetActive(true);
-
-            //});
+           
 
             On("loadGame", (e) =>
             {
@@ -203,6 +217,33 @@ namespace Project.Networking
         public void AttempToJoinLobby()
         {
             Emit("joinGame");
+        }
+
+        private IEnumerator AIPositionSmoothing(Transform aiTransform, Vector3 goalPosition)
+        {
+            float count = 0.1f; //In sync with server update
+            float currentTime = 0.0f;
+            Vector3 startPosition = aiTransform.position;
+
+            while (currentTime < count)
+            {
+                currentTime += Time.deltaTime;
+
+                if (currentTime < count)
+                {
+                    aiTransform.position = Vector3.Lerp(startPosition, goalPosition, currentTime / count);
+                }
+
+                yield return new WaitForEndOfFrame();
+
+                if (aiTransform == null)
+                {
+                    currentTime = count;
+                    yield return null;
+                }
+            }
+
+            yield return null;
         }
 
     }

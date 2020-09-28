@@ -10,6 +10,7 @@ namespace Project.Entities.Player
     public class PlayerManager : MonoBehaviour
     {
         public CharacterController controller;
+        private Animator animator;
         [SerializeField]
         private Transform cam;
         
@@ -44,6 +45,7 @@ namespace Project.Entities.Player
             attackCooldown = new Cooldown(1);
             currentHealth = maxHealth;
             combatData = new CombatData();
+            animator = GetComponent<Animator>();
         }
         public void Update()
         {
@@ -70,8 +72,10 @@ namespace Project.Entities.Player
             float vertical = Input.GetAxisRaw("Vertical");
 
             Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+            
             if(direction.magnitude >= 0.1f)
             {
+                animator.SetFloat("Speed", direction.magnitude);
                 float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);

@@ -16,3 +16,6 @@ MonoBehaviour:
   - name: AI_Base
     prefab: {fileID: 4317953186292657397, guid: 18d211d123a5eb14ba96957206de168c,
       type: 3}
+  - name: AI_Zombie
+    prefab: {fileID: 4317953186292657397, guid: 18d211d123a5eb14ba96957206de168c,
+      type: 3}
